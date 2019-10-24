@@ -6,11 +6,11 @@ mkdir $2/trimmed_output
 #faire une boucle pour faire chaque paire ulterieurement
 fastqc $1/*.fastq.gz -o $2/
 
-gunzip fastq/*.gz
+gunzip $1/*.gz
 
 
 #Trim les fastq avec AlienTrimmer, ranger les outputs dans un dossier output/trimmed_output
-liste_fichiers=`ls fastq/*_R1.fastq`
+liste_fichiers=`ls $1/*_R1.fastq`
 
 for fichier in $liste_fichiers
 do
@@ -51,7 +51,7 @@ vsearch --uchime_denovo $2/dereplicated/singsuppr.fasta --chimeras $2/dereplicat
 vsearch --cluster_size $2/dereplicated/nonchim.fasta --id 0.97 --centroids $2/dereplicated/OTU.fasta --relabel OTU_
 
 
-vsearch --search_exact $2/amplicon.fasta --db $2/dereplicated/OTU.fasta --id 0.97 --otutabout $2/dereplicated/abundance_table.txt --sizeout
+vsearch --usearch_global $2/amplicon.fasta --db $2/dereplicated/OTU.fasta --id 0.97 --otutabout $2/dereplicated/abundance_table.txt --sizeout
 
-vsearch --search_exact $2/amplicon.fasta --db databases/mock_16S_18S.fasta --id 0.9 --top_hits_only --userfields query+target --userout $2/dereplicated/vs_16S.txt
+vsearch --usearch_global $2/amplicon.fasta --db databases/mock_16S_18S.fasta --id 0.9 --top_hits_only --userfields query+target --userout $2/dereplicated/vs_16S.txt
 
